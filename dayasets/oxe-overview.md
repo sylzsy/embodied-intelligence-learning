@@ -33,20 +33,21 @@
 
   ## 3. 数据长什么样？
 
-  ### 层级结构
-  Dataset（整体数据集）
-    └── Episode（一条完整的轨迹）
-          └── Step（每个时间步）
-                ├── observation（观测）
-                │     ├── image：RGB图像 (300×300×3)
-                │     ├── state：本体感知状态（关节角度等）
-                │     └── language_instruction：自然语言任务描述
-                ├── action（动作）
-                │     ├── world_vector：末端位置 (x, y, z)
-                │     ├── rotation_delta：旋转 (roll, pitch, yaw)
-                │     └── gripper：夹爪开合度
-                ├── reward（奖励，可选）
-                └── discount（折扣因子，可选）
+   ### 层级结构
+
+  - **Dataset**（整体数据集）
+    - **Episode**（一条完整轨迹，内含多个 Step）
+      - **Step**（每个时间步）
+        - `observation`（观测）
+          - `image`：RGB图像 (300×300×3)
+          - `state`：本体感知状态（关节角度等）
+          - `language_instruction`：自然语言任务描述，如 "pick up the blue block"
+        - `action`（动作）
+          - `world_vector`：末端位置 (x, y, z)
+          - `rotation_delta`：旋转 (roll, pitch, yaw)
+          - `gripper`：夹爪开合度
+        - `reward`：奖励（可选）
+        - `discount`：折扣因子（可选）
 
   ### 关键特征
   - 所有数据统一为 **RLDS 格式**（基于 TFDS / Apache Arrow）
