@@ -57,9 +57,9 @@
   - 任务以自然语言形式标注，如 "pick up the blue block"
 
   ### 数据样例（概念）
-  Episode 1:
-    Task: "put the spoon in the drawer"
-    Step 0: image=[RGB数组], action=[0.01, 0.02, -0.01, 0, 0, 0, 0.8]
-    Step 1: image=[RGB数组], action=[0.02, 0.01, -0.02, 0, 0, 0, 0.7]
-    ...
-    Step 119: image=[RGB数组], action=[0, 0, 0, 0, 0, 0, 1.0]
+-Episode 1:
+   -Task: "put the spoon in the drawer"
+    -Step 0: image=[RGB数组], action=[0.01, 0.02, -0.01, 0, 0, 0, 0.8]
+    -Step 1: image=[RGB数组], action=[0.02, 0.01, -0.02, 0, 0, 0, 0.7]
+    -...
+    -Step 119: image=[RGB数组], action=[0, 0, 0, 0, 0, 0, 1.0]
