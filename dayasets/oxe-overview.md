@@ -56,10 +56,17 @@
   - 平均轨迹长度：约 120 个时间步，3-10Hz
   - 任务以自然语言形式标注，如 "pick up the blue block"
 
-  ### 数据样例（概念）
--Episode 1:
-   -Task: "put the spoon in the drawer"
-    -Step 0: image=[RGB数组], action=[0.01, 0.02, -0.01, 0, 0, 0, 0.8]
-    -Step 1: image=[RGB数组], action=[0.02, 0.01, -0.02, 0, 0, 0, 0.7]
-    -...
-    -Step 119: image=[RGB数组], action=[0, 0, 0, 0, 0, 0, 1.0]
+  ### 数据样例（概念示意）
+
+  一个 Episode 包含多条 Step，每条 Step 记录机器人看到什么、做了什么：
+
+  > **Episode #1 — 任务："put the spoon in the drawer"**
+
+  | Step | 观测（image） | 动作 action |
+  |------|-------------|-------------|
+  | 0 | RGB图像 | x=0.01, y=0.02, z=-0.01, roll=0, pitch=0, yaw=0, gripper=0.8 |
+  | 1 | RGB图像 | x=0.02, y=0.01, z=-0.02, roll=0, pitch=0, yaw=0, gripper=0.7 |
+  | ... | ... | ... |
+  | 119 | RGB图像 | x=0, y=0, z=0, roll=0, pitch=0, yaw=0, gripper=1.0（夹紧） |
+
+  > 每一步：机器人看到一张图，输出一个7维动作（x/y/z位移 + roll/pitch/yaw旋转 + gripper开合度）。
