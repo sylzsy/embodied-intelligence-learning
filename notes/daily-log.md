@@ -12,3 +12,11 @@
 
   - **明天计划**：下载 Open X-Embodiment 一个小子集（比如 Bridge V2），用 Python 加载数据看看实际长什么样。开第二篇论文
   Diffusion Policy，和 RT-2 对比着看。
+
+## 2026-07-01
+
+- **今日收获**：跑通了第一个机器人 episode 数据质量检查脚本，理解了 episode、step、observation、action、language_instruction、timestamp 的基本结构。脚本能够统计轨迹长度、动作维度、图像尺寸，并识别语言指令缺失、state 为空、时间戳不递增、动作维度不一致、图像尺寸不一致等问题。
+
+- **卡点/疑问**：当前使用的是手写样例数据，还没有加载真实 Open X-Embodiment / BridgeData V2 数据。下一步需要学习 RLDS / TFDS 数据格式，并把真实数据转换成统一 JSONL 格式。
+
+- **明天计划**：研究 BridgeData V2 或 Open X-Embodiment 的小样本加载方式，编写 `load_rlds_sample.py`，把真实 episode 的字段结构打印出来。
