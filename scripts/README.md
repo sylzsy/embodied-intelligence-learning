@@ -33,6 +33,27 @@ python scripts/check_dataset_quality.py --input scripts/sample_robot_episodes.js
 python scripts/check_dataset_quality.py --input scripts/sample_robot_episodes.jsonl --output reports/sample_quality_summary.json
 ```
 
+### `bridge_sample_to_jsonl.py`
+
+将一个 BridgeData-style 小样本转换为本项目统一的 JSONL episode 格式。该脚本不下载完整 BridgeData V2，只用于验证字段映射逻辑。
+
+运行示例：
+
+```bash
+python scripts/bridge_sample_to_jsonl.py --output scripts/bridge_mock_episodes.jsonl
+python scripts/check_dataset_quality.py --input scripts/bridge_mock_episodes.jsonl
+```
+
+### `inspect_tfds_builder.py`
+
+读取 TFDS dataset builder 的 metadata，用于在不下载完整数据集的情况下确认数据集名称、版本、features 和 splits。
+
+运行示例：
+
+```bash
+python scripts/inspect_tfds_builder.py --dataset bridge
+```
+
 ## 计划优先实现
 
 - `load_rlds_sample.py`: 加载公开机器人数据集小样本。
