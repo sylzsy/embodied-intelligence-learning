@@ -34,3 +34,15 @@
 - **卡点 / 疑问**：当前本地 Python 环境没有安装 `tensorflow` 和 `tensorflow_datasets`，因此还没有直接加载真实 TFDS/RLDS 数据。后续需要单独准备兼容环境，再尝试读取真实 BridgeData V2 小样本 metadata。
 
 - **下一步行动**：准备 Day 3，研究如何安装或创建适合 TFDS/RLDS 的 Python 环境，并尝试读取 `bridge` 数据集的 metadata 或小规模样本。
+
+## 2026-07-01 Day 3
+
+- **今日完成**：创建了独立 conda 环境 `ei-tfds`，使用 Python 3.11.15，并安装了 TensorFlow 2.21.0 和 TensorFlow Datasets 4.9.10。完成了 TFDS/RLDS 数据加载环境的基础搭建。
+
+- **今日理解**：没有使用 base 环境，因为 base 是 Python 3.13，不适合作为 TensorFlow 主环境。通过独立环境隔离依赖，可以避免污染已有项目环境，也方便后续复现实验。
+
+- **运行结果**：运行 `inspect_tfds_builder.py --dataset mnist` 成功读取 TFDS metadata，输出了 `mnist/3.0.1`、`image` 和 `label` 等 features，说明 TFDS 环境和 builder 检查脚本可用。
+
+- **卡点 / 疑问**：尝试读取 `bridge` metadata 时本地超时，判断不是 TensorFlow/TFDS 安装问题，而可能是 TFDS catalog 远程初始化或网络访问问题。
+
+- **下一步行动**：Day 4 准备使用 Google Colab 或更稳定网络尝试读取 `bridge` metadata；如果仍然受限，则继续基于 BridgeData-style schema 完善字段报告和质量检查流程。
