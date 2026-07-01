@@ -17,7 +17,7 @@
 | 数据集调研 | 已启动 | [Open X-Embodiment 初探](datasets/oxe-overview.md) |
 | 论文阅读 | 已启动 | [RT-2 论文笔记](papers/rt-2-notes.md) |
 | 学习日志 | 已启动 | [daily-log](notes/daily-log.md) |
-| 数据质量检测 | 待开始 | 计划编写公开数据集质量检查脚本 |
+| 数据质量检测 | 已启动 | [样例质量检查脚本](scripts/check_dataset_quality.py) / [Day 1 执行手册](notes/day1-quality-check-walkthrough.md) |
 | 仿真实践 | 待开始 | 计划完成 ROS2 / Isaac Sim 基础 demo |
 
 ## 仓库结构

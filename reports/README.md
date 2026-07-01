@@ -2,6 +2,11 @@
 
 阶段性报告和可展示成果。
 
+## 已完成
+
+- [样例机器人数据质量检查报告](sample-quality-report.md)
+- [样例质量检查 JSON 输出](sample_quality_summary.json)
+
 后续优先补充：
 
 - Open X-Embodiment 子集数据质量分析报告

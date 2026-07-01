@@ -1,0 +1,68 @@
+{
+  "episodes": 2,
+  "steps": 5,
+  "trajectory_length": {
+    "min": 2,
+    "max": 3,
+    "mean": 2.5
+  },
+  "action_dimensions": {
+    "4": 4,
+    "2": 1
+  },
+  "image_shapes": {
+    "(256, 256, 3)": 4,
+    "(128, 128, 3)": 1
+  },
+  "unique_language_instructions": 2,
+  "top_language_instructions": [
+    [
+      "pick up the red block",
+      3
+    ],
+    [
+      "place the cup on the plate",
+      1
+    ]
+  ],
+  "issue_count": 5,
+  "issue_types": {
+    "missing_language_instruction": 1,
+    "invalid_state": 1,
+    "non_increasing_timestamp": 1,
+    "inconsistent_action_dim": 1,
+    "inconsistent_image_shape": 1
+  },
+  "issues": [
+    {
+      "episode_id": "demo_bad_001",
+      "step": 0,
+      "type": "missing_language_instruction",
+      "message": "missing language instruction"
+    },
+    {
+      "episode_id": "demo_bad_001",
+      "step": 1,
+      "type": "invalid_state",
+      "message": "invalid state"
+    },
+    {
+      "episode_id": "demo_bad_001",
+      "step": 1,
+      "type": "non_increasing_timestamp",
+      "message": "non increasing timestamp"
+    },
+    {
+      "episode_id": "demo_bad_001",
+      "step": 0,
+      "type": "inconsistent_action_dim",
+      "message": "action_dim is 2, expected common value 4"
+    },
+    {
+      "episode_id": "demo_bad_001",
+      "step": 1,
+      "type": "inconsistent_image_shape",
+      "message": "image_shape is (128, 128, 3), expected common value (256, 256, 3)"
+    }
+  ]
+}
