@@ -62,7 +62,12 @@ def image_shape(image: Any) -> tuple[int, int, int] | None:
     return (height, width, channels)
 
 
-def check_episodes(episodes: list[dict[str, Any]]) -> dict[str, Any]:
+def check_episodes(
+    episodes: list[dict[str, Any]],
+    expected_action_dim: int | None = None,
+    expected_state_dim: int | None = None,
+    expected_image_shape: tuple[int, int, int] | None = None,
+) -> dict[str, Any]:
     issues: list[dict[str, Any]] = []
     trajectory_lengths: list[int] = []
     action_dims: Counter[int] = Counter()
@@ -120,6 +125,15 @@ def check_episodes(episodes: list[dict[str, Any]]) -> dict[str, Any]:
             state = observation.get("state")
             if not isinstance(state, list) or not state:
                 issues.append(issue(episode_id, step_index, "invalid_state"))
+            elif expected_state_dim is not None and len(state) != expected_state_dim:
+                issues.append(
+                    {
+                        "episode_id": episode_id,
+                        "step": step_index,
+                        "type": "unexpected_state_dim",
+                        "message": f"state_dim is {len(state)}, expected {expected_state_dim}",
+                    }
+                )
 
             instruction = observation.get("language_instruction")
             if not isinstance(instruction, str) or not instruction.strip():
@@ -132,6 +146,15 @@ def check_episodes(episodes: list[dict[str, Any]]) -> dict[str, Any]:
                 issues.append(issue(episode_id, step_index, "invalid_action"))
             else:
                 action_dims[len(action)] += 1
+                if expected_action_dim is not None and len(action) != expected_action_dim:
+                    issues.append(
+                        {
+                            "episode_id": episode_id,
+                            "step": step_index,
+                            "type": "unexpected_action_dim",
+                            "message": f"action_dim is {len(action)}, expected {expected_action_dim}",
+                        }
+                    )
                 step_records.append(
                     {
                         "episode_id": episode_id,
@@ -151,6 +174,8 @@ def check_episodes(episodes: list[dict[str, Any]]) -> dict[str, Any]:
 
     issues.extend(consistency_issues(step_records, "action_dim", action_dims))
     issues.extend(consistency_issues(step_records, "image_shape", image_shapes))
+    if expected_image_shape is not None:
+        issues.extend(expected_value_issues(step_records, "image_shape", expected_image_shape))
 
     return {
         "episodes": len(episodes),
@@ -158,6 +183,11 @@ def check_episodes(episodes: list[dict[str, Any]]) -> dict[str, Any]:
         "trajectory_length": summarize_numbers(trajectory_lengths),
         "action_dimensions": dict(action_dims),
         "image_shapes": {str(key): value for key, value in image_shapes.items()},
+        "expected_schema": {
+            "action_dim": expected_action_dim,
+            "state_dim": expected_state_dim,
+            "image_shape": expected_image_shape,
+        },
         "unique_language_instructions": len(instructions),
         "top_language_instructions": instructions.most_common(10),
         "issue_count": len(issues),
@@ -199,6 +229,37 @@ def consistency_issues(
     return results
 
 
+def expected_value_issues(
+    step_records: list[dict[str, Any]],
+    field: str,
+    expected: Any,
+) -> list[dict[str, Any]]:
+    issue_type = f"unexpected_{field}"
+    results = []
+    for record in step_records:
+        if record["field"] == field and record["value"] != expected:
+            results.append(
+                {
+                    "episode_id": record["episode_id"],
+                    "step": record["step"],
+                    "type": issue_type,
+                    "message": f"{field} is {record['value']}, expected {expected}",
+                }
+            )
+    return results
+
+
+def parse_image_shape(value: str) -> tuple[int, int, int]:
+    parts = value.lower().replace(",", "x").split("x")
+    if len(parts) != 3:
+        raise argparse.ArgumentTypeError("Image shape must look like 256x256x3.")
+    try:
+        height, width, channels = [int(part.strip()) for part in parts]
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("Image shape values must be integers.") from exc
+    return (height, width, channels)
+
+
 def summarize_numbers(values: list[int]) -> dict[str, float | int | None]:
     if not values:
         return {"min": None, "max": None, "mean": None}
@@ -209,11 +270,23 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Check robot episode dataset quality.")
     parser.add_argument("--input", required=True, help="Path to a JSON or JSONL episode file.")
     parser.add_argument("--output", help="Optional path for the JSON summary.")
+    parser.add_argument("--expected-action-dim", type=int, help="Expected action vector length.")
+    parser.add_argument("--expected-state-dim", type=int, help="Expected state vector length.")
+    parser.add_argument(
+        "--expected-image-shape",
+        type=parse_image_shape,
+        help="Expected image shape, for example 256x256x3.",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input)
     episodes = load_episodes(input_path)
-    summary = check_episodes(episodes)
+    summary = check_episodes(
+        episodes,
+        expected_action_dim=args.expected_action_dim,
+        expected_state_dim=args.expected_state_dim,
+        expected_image_shape=args.expected_image_shape,
+    )
 
     output = json.dumps(summary, ensure_ascii=False, indent=2)
     print(output)

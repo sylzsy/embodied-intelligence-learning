@@ -5,6 +5,7 @@
 ## 已完成
 
 - [Open X-Embodiment 初探](oxe-overview.md)
+- [BridgeData V2 字段结构笔记](bridge-v2-field-schema.md)
 
 ## 下一步
 

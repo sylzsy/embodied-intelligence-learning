@@ -7,6 +7,7 @@
 - [Day 1：跑通机器人数据质量检查](day1-quality-check-walkthrough.md)
 - [Day 2：理解 BridgeData V2 字段结构](day2-bridge-data-loading-walkthrough.md)
 - [Day 3：搭建 TFDS/RLDS 环境](day3-tfds-environment-walkthrough.md)
+- [Day 4：BridgeData V2 Metadata 与 Colab 验证路线](day4-bridge-metadata-colab-walkthrough.md)
 
 建议每次记录保持三个部分：
 
