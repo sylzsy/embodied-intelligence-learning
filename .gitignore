@@ -24,6 +24,8 @@ models/
 # Logs and reports generated locally
 logs/
 *.log
+reports/streamlit_uploads/
+reports/streamlit_runs/
 
 # OS / editor
 .DS_Store

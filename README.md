@@ -44,6 +44,8 @@ BridgeData V2 schema 调研
 
 ## 快速运行
 
+命令行 pipeline：
+
 ```powershell
 python scripts\run_quality_pipeline.py --input scripts\bridge_mock_episodes.jsonl --profile configs\bridge_v2_profile.json --output-dir reports\bridge_profile_pipeline
 ```
@@ -55,6 +57,14 @@ python scripts\run_quality_pipeline.py --input scripts\bridge_mock_episodes.json
 - `reports/bridge_profile_pipeline/plots/*.png`
 - `reports/bridge_profile_pipeline/manifest.json`
 - `reports/bridge_profile_pipeline/report.md`
+
+Streamlit 页面：
+
+```powershell
+streamlit run app.py
+```
+
+页面支持上传 JSON / JSONL episode 文件，选择 dataset profile，并展示质量检查结果、action/state 分布图和自动生成的 Markdown 报告。
 
 ## 项目结果
 
@@ -86,6 +96,7 @@ python scripts\run_quality_pipeline.py --input scripts\bridge_mock_episodes.json
 - JSON / JSONL
 - TensorFlow Datasets metadata inspection
 - Matplotlib
+- Streamlit
 - Markdown report generation
 - GitHub 项目文档组织
 

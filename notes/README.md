@@ -16,6 +16,7 @@
 - [Day 10：自动生成 Pipeline Markdown 报告](day10-auto-report-walkthrough.md)
 - [Day 11：整理最终项目 README](day11-final-readme-walkthrough.md)
 - [Day 12：整理面试问答](day12-interview-qa-walkthrough.md)
+- [Day 13：Streamlit 数据质量平台页面](day13-streamlit-quality-app-walkthrough.md)
 
 建议每次记录保持三个部分：
 

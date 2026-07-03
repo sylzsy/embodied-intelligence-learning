@@ -1,5 +1,15 @@
 # 学习日志
 
+## 2026-07-03 Day 13
+
+- **今日完成**：新增 `app.py`，使用 Streamlit 将机器人数据质量 pipeline 包装成可交互页面。页面支持使用内置 BridgeData-style 样例或上传 JSON / JSONL 文件，选择 dataset profile 后一键运行质量检查、分布统计、图表生成和 Markdown 报告生成。
+
+- **今日理解**：Streamlit 页面没有重写质检逻辑，而是复用已有 pipeline。这样做的好处是命令行能力和页面能力保持一致，后续继续增强脚本时，页面也能同步受益。
+
+- **运行结果**：页面运行后可以展示 Episodes、Steps、Issue Count、Language Tasks，并在不同 tab 中查看 quality summary、distribution summary、action/state 图表、report 和运行日志。
+
+- **下一步行动**：Day 14 继续增强页面展示和下载体验，并准备加入 LLM 报告解释模块。
+
 ## 2026-07-03 Day 10
 
 - **今日完成**：新增 `generate_pipeline_report.py`，让 pipeline 可以根据 `manifest.json`、`quality_summary.json`、`distribution_summary.json` 和图表自动生成 `report.md`。同时补充第一阶段总结报告，明确 Day 1-10 已经形成 BridgeData-style 机器人数据质量分析闭环。
