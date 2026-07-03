@@ -67,6 +67,9 @@ def check_episodes(
     expected_action_dim: int | None = None,
     expected_state_dim: int | None = None,
     expected_image_shape: tuple[int, int, int] | None = None,
+    min_trajectory_length: int | None = None,
+    max_trajectory_length: int | None = None,
+    action_abs_limit: float | None = None,
 ) -> dict[str, Any]:
     issues: list[dict[str, Any]] = []
     trajectory_lengths: list[int] = []
@@ -74,6 +77,7 @@ def check_episodes(
     image_shapes: Counter[tuple[int, int, int]] = Counter()
     instructions: Counter[str] = Counter()
     step_records: list[dict[str, Any]] = []
+    quality_counters: Counter[str] = Counter()
 
     for episode_index, episode in enumerate(episodes):
         episode_id = episode.get("episode_id", f"episode_{episode_index}")
@@ -91,6 +95,24 @@ def check_episodes(
             continue
 
         trajectory_lengths.append(len(steps))
+        if min_trajectory_length is not None and len(steps) < min_trajectory_length:
+            issues.append(
+                {
+                    "episode_id": episode_id,
+                    "step": None,
+                    "type": "trajectory_too_short",
+                    "message": f"trajectory length is {len(steps)}, expected at least {min_trajectory_length}",
+                }
+            )
+        if max_trajectory_length is not None and len(steps) > max_trajectory_length:
+            issues.append(
+                {
+                    "episode_id": episode_id,
+                    "step": None,
+                    "type": "trajectory_too_long",
+                    "message": f"trajectory length is {len(steps)}, expected at most {max_trajectory_length}",
+                }
+            )
         if len(steps) < 2:
             issues.append(
                 {
@@ -110,6 +132,7 @@ def check_episodes(
 
             shape = image_shape(observation.get("image"))
             if shape is None:
+                quality_counters["missing_or_invalid_image"] += 1
                 issues.append(issue(episode_id, step_index, "invalid_image"))
             else:
                 image_shapes[shape] += 1
@@ -124,6 +147,7 @@ def check_episodes(
 
             state = observation.get("state")
             if not isinstance(state, list) or not state:
+                quality_counters["missing_or_invalid_state"] += 1
                 issues.append(issue(episode_id, step_index, "invalid_state"))
             elif expected_state_dim is not None and len(state) != expected_state_dim:
                 issues.append(
@@ -137,12 +161,14 @@ def check_episodes(
 
             instruction = observation.get("language_instruction")
             if not isinstance(instruction, str) or not instruction.strip():
+                quality_counters["missing_language_instruction"] += 1
                 issues.append(issue(episode_id, step_index, "missing_language_instruction"))
             else:
                 instructions[instruction.strip().lower()] += 1
 
             action = step.get("action")
             if not isinstance(action, list) or not action:
+                quality_counters["missing_or_invalid_action"] += 1
                 issues.append(issue(episode_id, step_index, "invalid_action"))
             else:
                 action_dims[len(action)] += 1
@@ -155,6 +181,30 @@ def check_episodes(
                             "message": f"action_dim is {len(action)}, expected {expected_action_dim}",
                         }
                     )
+                if action_abs_limit is not None:
+                    for action_index, value in enumerate(action):
+                        if not isinstance(value, (int, float)):
+                            issues.append(
+                                {
+                                    "episode_id": episode_id,
+                                    "step": step_index,
+                                    "type": "non_numeric_action_value",
+                                    "message": f"action[{action_index}] is not numeric: {value}",
+                                }
+                            )
+                            continue
+                        if abs(value) > action_abs_limit:
+                            issues.append(
+                                {
+                                    "episode_id": episode_id,
+                                    "step": step_index,
+                                    "type": "action_value_out_of_range",
+                                    "message": (
+                                        f"action[{action_index}] is {value}, "
+                                        f"expected abs(value) <= {action_abs_limit}"
+                                    ),
+                                }
+                            )
                 step_records.append(
                     {
                         "episode_id": episode_id,
@@ -177,9 +227,11 @@ def check_episodes(
     if expected_image_shape is not None:
         issues.extend(expected_value_issues(step_records, "image_shape", expected_image_shape))
 
+    total_steps = sum(trajectory_lengths)
+
     return {
         "episodes": len(episodes),
-        "steps": sum(trajectory_lengths),
+        "steps": total_steps,
         "trajectory_length": summarize_numbers(trajectory_lengths),
         "action_dimensions": dict(action_dims),
         "image_shapes": {str(key): value for key, value in image_shapes.items()},
@@ -187,7 +239,11 @@ def check_episodes(
             "action_dim": expected_action_dim,
             "state_dim": expected_state_dim,
             "image_shape": expected_image_shape,
+            "min_trajectory_length": min_trajectory_length,
+            "max_trajectory_length": max_trajectory_length,
+            "action_abs_limit": action_abs_limit,
         },
+        "quality_rates": summarize_quality_rates(quality_counters, total_steps),
         "unique_language_instructions": len(instructions),
         "top_language_instructions": instructions.most_common(10),
         "issue_count": len(issues),
@@ -266,6 +322,18 @@ def summarize_numbers(values: list[int]) -> dict[str, float | int | None]:
     return {"min": min(values), "max": max(values), "mean": round(mean(values), 2)}
 
 
+def summarize_quality_rates(counters: Counter[str], total_steps: int) -> dict[str, dict[str, float | int]]:
+    if total_steps == 0:
+        return {
+            key: {"count": value, "rate": 0.0}
+            for key, value in sorted(counters.items())
+        }
+    return {
+        key: {"count": value, "rate": round(value / total_steps, 4)}
+        for key, value in sorted(counters.items())
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Check robot episode dataset quality.")
     parser.add_argument("--input", required=True, help="Path to a JSON or JSONL episode file.")
@@ -277,6 +345,13 @@ def main() -> None:
         type=parse_image_shape,
         help="Expected image shape, for example 256x256x3.",
     )
+    parser.add_argument("--min-trajectory-length", type=int, help="Minimum episode length.")
+    parser.add_argument("--max-trajectory-length", type=int, help="Maximum episode length.")
+    parser.add_argument(
+        "--action-abs-limit",
+        type=float,
+        help="Flag action values whose absolute value exceeds this limit.",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input)
@@ -286,6 +361,9 @@ def main() -> None:
         expected_action_dim=args.expected_action_dim,
         expected_state_dim=args.expected_state_dim,
         expected_image_shape=args.expected_image_shape,
+        min_trajectory_length=args.min_trajectory_length,
+        max_trajectory_length=args.max_trajectory_length,
+        action_abs_limit=args.action_abs_limit,
     )
 
     output = json.dumps(summary, ensure_ascii=False, indent=2)

@@ -8,6 +8,7 @@
 - [样例质量检查 JSON 输出](sample_quality_summary.json)
 - [BridgeData V2 Mock Schema 质量检查报告](bridge-mock-schema-quality-report.md)
 - [BridgeData V2 Mock Schema JSON 输出](bridge_mock_schema_quality_summary.json)
+- [Day 5 数据质量指标增强报告](day5-quality-metrics-report.md)
 
 后续优先补充：
 
