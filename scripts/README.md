@@ -76,6 +76,16 @@ python scripts/inspect_tfds_builder.py --dataset bridge
 python scripts/summarize_dataset.py --input scripts/bridge_mock_episodes.jsonl --output reports/bridge_mock_distribution_summary.json
 ```
 
+### `plot_distribution.py`
+
+将 action / state 分布统计结果绘制为 PNG 图表。
+
+运行示例：
+
+```bash
+python scripts/plot_distribution.py --input reports/bridge_mock_distribution_summary.json --output-dir assets/distributions
+```
+
 ## 计划优先实现
 
 - `load_rlds_sample.py`: 加载公开机器人数据集小样本。
