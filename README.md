@@ -1,14 +1,22 @@
-# Embodied Intelligence Learning
+# Embodied Intelligence Data Quality Pipeline
 
-具身智能数据工程与仿真数据管线学习项目。
+面向 BridgeData V2 / Open X-Embodiment 风格机器人数据的质量分析与报告生成项目。
 
-本仓库用于记录我从数据产品 / 数据工程背景切入具身智能方向的学习过程，重点关注机器人公开数据集、数据质量评估、仿真数据管线和模仿学习方法。
+本仓库记录我从数据产品 / 数据工程背景切入具身智能方向的第一阶段实践，重点是理解机器人训练数据结构，并搭建一条可复现的数据质量分析 pipeline。
 
-## 目标方向
+## 项目定位
 
-- 具身智能数据工程师
-- 仿真数据管线工程师
-- 机器人数据产品 / 系统工程方向
+机器人模仿学习和 VLA 模型训练依赖高质量 episode 数据。一个 episode 通常由多个 step 组成，每个 step 包含图像 observation、机器人 state、语言指令、action 和时间信息。
+
+本项目不直接训练模型，而是先解决训练前的数据工程问题：
+
+- 机器人数据字段是否完整。
+- action / state 维度是否符合 schema。
+- 图像尺寸是否一致。
+- timestamp 是否递增。
+- 轨迹长度和 action 数值是否异常。
+- action / state 每一维分布是否可解释。
+- 分析结果是否能自动生成报告并复现。
 
 ## 当前进度
 
@@ -17,10 +25,10 @@
 | 数据集调研 | 已启动 | [Open X-Embodiment 初探](datasets/oxe-overview.md) / [BridgeData V2 字段结构](datasets/bridge-v2-field-schema.md) |
 | 论文阅读 | 已启动 | [RT-2 论文笔记](papers/rt-2-notes.md) |
 | 学习日志 | 已启动 | [daily-log](notes/daily-log.md) |
-| 数据质量检测 | 已形成阶段成果 | [质量检查脚本](scripts/check_dataset_quality.py) / [BridgeData V2 项目报告](reports/bridge-data-quality-project-report.md) |
+| 数据质量检测 | 第一阶段完成 | [质量检查脚本](scripts/check_dataset_quality.py) / [自动 Pipeline 报告](reports/bridge_profile_pipeline/report.md) / [第一阶段总结](reports/stage1-bridge-data-quality-summary.md) |
 | 仿真实践 | 待开始 | 计划完成 ROS2 / Isaac Sim 基础 demo |
 
-## 阶段成果：BridgeData V2 数据质量检查
+## Pipeline 流程
 
 当前已完成一个可展示的数据工程闭环：
 
@@ -29,17 +37,57 @@ BridgeData V2 schema 调研
 -> BridgeData-style mock episode 构造
 -> 统一 JSONL 格式转换
 -> schema 和质量阈值检查
--> Markdown / JSON 报告输出
+-> action/state 分布统计与可视化
+-> profile 配置化
+-> 一键 pipeline 自动生成 Markdown / JSON / 图表报告
 ```
+
+## 快速运行
+
+```powershell
+python scripts\run_quality_pipeline.py --input scripts\bridge_mock_episodes.jsonl --profile configs\bridge_v2_profile.json --output-dir reports\bridge_profile_pipeline
+```
+
+运行后会生成：
+
+- `reports/bridge_profile_pipeline/quality_summary.json`
+- `reports/bridge_profile_pipeline/distribution_summary.json`
+- `reports/bridge_profile_pipeline/plots/*.png`
+- `reports/bridge_profile_pipeline/manifest.json`
+- `reports/bridge_profile_pipeline/report.md`
+
+## 项目结果
+
+当前 BridgeData-style mock episode 的检查结果：
+
+| 指标 | 结果 |
+| --- | --- |
+| episodes | 1 |
+| steps | 2 |
+| action_dim | 7 |
+| state_dim | 7 |
+| image_shape | 256 x 256 x 3 |
+| issue_count | 0 |
 
 核心产出：
 
 - [BridgeData V2 字段结构笔记](datasets/bridge-v2-field-schema.md)
 - [BridgeData V2 数据质量检查项目报告](reports/bridge-data-quality-project-report.md)
+- [BridgeData V2 Profile Pipeline 自动报告](reports/bridge_profile_pipeline/report.md)
+- [第一阶段成果总结](reports/stage1-bridge-data-quality-summary.md)
 - [简历项目描述](reports/resume-project-brief.md)
 - [数据质量检查脚本](scripts/check_dataset_quality.py)
 
-当前脚本支持字段完整性、action/state 维度、图像尺寸、timestamp 递增、轨迹长度阈值、action 极端值和缺失率统计。
+当前脚本支持字段完整性、action/state 维度、图像尺寸、timestamp 递增、轨迹长度阈值、action 极端值、缺失率统计、action/state 分布统计、可视化图表和自动 Markdown 报告生成。
+
+## 技术栈
+
+- Python
+- JSON / JSONL
+- TensorFlow Datasets metadata inspection
+- Matplotlib
+- Markdown report generation
+- GitHub 项目文档组织
 
 ## 仓库结构
 
@@ -53,15 +101,19 @@ BridgeData V2 schema 调研
 └── scripts/      # 数据加载、质量检查、统计分析脚本
 ```
 
-## 近期计划
+## 第一阶段结论
 
-1. 选择 Open X-Embodiment / BridgeData V2 的小规模子集，完成真实数据加载。
-2. 编写数据质量检查脚本，覆盖字段缺失、轨迹长度、图像尺寸、动作维度和语言指令质量。
-3. 输出第一版数据质量分析报告，形成可放入简历的项目成果。
+第一阶段已经完成“机器人数据集结构理解 + 统一字段映射 + 数据质量检测 + 分布统计与可视化 + 自动报告生成”的闭环。当前项目可以支撑具身智能数据工程、机器人数据集工程、仿真数据管线方向的简历表达。
+
+## 下一阶段计划
+
+1. 将当前 pipeline 迁移到真实 BridgeData V2 / Open X-Embodiment 小样本。
+2. 开始第二阶段仿真与数据管线实践，优先跑通一个轻量仿真或机器人控制 demo。
+3. 对比仿真数据和真实机器人数据的字段差异。
 4. 继续阅读 RT-1、RT-2、Diffusion Policy、ACT、OpenVLA 等论文，并补充工程落地视角。
 
 ## 简历表达目标
 
 最终希望该仓库能够支撑以下简历表述：
 
-> 围绕具身智能公开数据集搭建数据分析与质量检测流程，完成 Open X-Embodiment / BridgeData V2 等数据集结构调研，编写数据质量检查脚本并输出分析报告，熟悉机器人学习数据中 observation、action、language instruction、episode / step 等核心字段。
+> 围绕 BridgeData V2 / Open X-Embodiment 风格机器人数据搭建数据质量分析 pipeline，完成 episode-step 数据结构调研、统一字段映射、schema 规则检查、action/state 分布统计、可视化图表和自动 Markdown 报告生成，熟悉具身智能训练数据中 observation、action、state、language instruction 和 timestamp 等核心字段。

@@ -21,5 +21,6 @@
     "reports\\bridge_profile_pipeline\\plots\\action_std.png",
     "reports\\bridge_profile_pipeline\\plots\\state_range.png",
     "reports\\bridge_profile_pipeline\\plots\\state_std.png"
-  ]
+  ],
+  "report": "reports\\bridge_profile_pipeline\\report.md"
 }

@@ -66,6 +66,7 @@ def main() -> None:
     quality_json = output_dir / "quality_summary.json"
     distribution_json = output_dir / "distribution_summary.json"
     manifest_json = output_dir / "manifest.json"
+    report_md = output_dir / "report.md"
 
     python = sys.executable
     run(
@@ -123,9 +124,20 @@ def main() -> None:
             str(plot_dir / "state_range.png"),
             str(plot_dir / "state_std.png"),
         ],
+        "report": str(report_md),
     }
     manifest_json.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote pipeline manifest to {manifest_json}")
+    run(
+        [
+            python,
+            "scripts/generate_pipeline_report.py",
+            "--manifest",
+            str(manifest_json),
+            "--output",
+            str(report_md),
+        ]
+    )
 
 
 if __name__ == "__main__":

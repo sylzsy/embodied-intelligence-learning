@@ -1,5 +1,31 @@
 # 学习日志
 
+## 2026-07-03 Day 10
+
+- **今日完成**：新增 `generate_pipeline_report.py`，让 pipeline 可以根据 `manifest.json`、`quality_summary.json`、`distribution_summary.json` 和图表自动生成 `report.md`。同时补充第一阶段总结报告，明确 Day 1-10 已经形成 BridgeData-style 机器人数据质量分析闭环。
+
+- **今日理解**：自动报告的价值在于可复现和可交付。它不是手动复制粘贴结果，而是由 pipeline 产物自动生成，能把输入数据、profile 配置、质量检查、分布统计、图表和结论组织成一份可展示的 Markdown 报告。
+
+- **运行结果**：使用 `configs/bridge_v2_profile.json` 运行 pipeline 后，成功生成 `reports/bridge_profile_pipeline/report.md`。当前样例数据共有 1 个 episode、2 个 step，action/state 均为 7 维，图像尺寸为 256 x 256 x 3，`issue_count` 为 0。
+
+- **阶段总结**：第一阶段完成了从 schema 调研、统一字段映射、质量检查、质量指标增强、分布统计、可视化、profile 配置化到自动报告生成的完整链路。下一阶段进入仿真与数据管线实践，并准备接入真实 BridgeData V2 / Open X-Embodiment 小样本。
+
+## 2026-07-03 Day 11
+
+- **今日完成**：整理根目录 `README.md`，将仓库从学习记录升级为项目展示页，补充项目定位、pipeline 流程、快速运行命令、输出产物、样例结果、技术栈、第一阶段结论和下一阶段计划。
+
+- **今日理解**：README 是项目的入口。对面试官来说，README 需要快速回答“你做了什么、怎么运行、结果是什么、有什么工程价值”，而不是只记录学习过程。
+
+- **运行结果**：README 现在可以直接说明 BridgeData-style 数据质量 pipeline 的输入、处理流程和输出报告。
+
+## 2026-07-03 Day 12
+
+- **今日完成**：新增 `reports/project-interview-qa.md`，整理 60 秒项目介绍、高频面试问题、简历 bullet 和追问回答模板。
+
+- **今日理解**：项目做完之后，还需要把工程实现转化成面试表达。重点不是背脚本，而是能解释为什么要做数据质量、为什么要统一字段、profile 和 manifest 的工程价值，以及这些检查如何影响机器人模型训练。
+
+- **阶段收口**：Day 10、Day 11、Day 12 完成后，第一阶段形成了代码、报告、README 和面试表达四类成果，可以作为简历项目基础。
+
 ## 2026-07-03 Day 9
 
 - **今日完成**：新增 `configs/bridge_v2_profile.json`，将 BridgeData V2 的 action/state 维度、图像尺寸、轨迹长度阈值、action 数值阈值和字段映射关系配置化；改造 `run_quality_pipeline.py` 支持 `--profile` 参数。

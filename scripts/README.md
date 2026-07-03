@@ -96,15 +96,26 @@ python scripts/plot_distribution.py --input reports/bridge_mock_distribution_sum
 python scripts/run_quality_pipeline.py --input scripts/bridge_mock_episodes.jsonl --output-dir reports/bridge_mock_pipeline
 ```
 
+### `generate_pipeline_report.py`
+
+根据 pipeline 的 `manifest.json` 自动生成 Markdown 报告。
+
+运行示例：
+
+```bash
+python scripts/generate_pipeline_report.py --manifest reports/bridge_mock_pipeline/manifest.json --output reports/bridge_mock_pipeline/report.md
+```
+
 使用数据集 profile：
 
 ```bash
 python scripts/run_quality_pipeline.py --input scripts/bridge_mock_episodes.jsonl --profile configs/bridge_v2_profile.json --output-dir reports/bridge_mock_pipeline
 ```
 
-## 计划优先实现
+## 后续计划
 
 - `load_rlds_sample.py`: 加载公开机器人数据集小样本。
-- `summarize_dataset.py`: 输出数据集统计摘要，供报告和 README 使用。
+- 增加多视角图像字段检查。
+- 将当前 pipeline 迁移到真实 BridgeData V2 / Open X-Embodiment 小样本。
 
 脚本应尽量支持命令行参数，方便复现实验结果。

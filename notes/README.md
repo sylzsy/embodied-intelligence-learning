@@ -13,6 +13,9 @@
 - [Day 7：Action / State 分布可视化](day7-distribution-visualization-walkthrough.md)
 - [Day 8：一键数据质量分析 Pipeline](day8-quality-pipeline-walkthrough.md)
 - [Day 9：数据集 Profile 配置化](day9-dataset-profile-walkthrough.md)
+- [Day 10：自动生成 Pipeline Markdown 报告](day10-auto-report-walkthrough.md)
+- [Day 11：整理最终项目 README](day11-final-readme-walkthrough.md)
+- [Day 12：整理面试问答](day12-interview-qa-walkthrough.md)
 
 建议每次记录保持三个部分：
 

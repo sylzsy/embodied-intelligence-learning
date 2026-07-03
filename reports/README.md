@@ -15,11 +15,13 @@
 - [简历项目描述](resume-project-brief.md)
 - [BridgeData V2 项目质量检查 JSON 输出](bridge_project_quality_summary.json)
 - [BridgeData V2 Action / State 分布 JSON 输出](bridge_mock_distribution_summary.json)
+- [BridgeData V2 Profile Pipeline 自动报告](bridge_profile_pipeline/report.md)
+- [第一阶段成果总结](stage1-bridge-data-quality-summary.md)
+- [面试问答手册](project-interview-qa.md)
 
 后续优先补充：
 
-- Open X-Embodiment 子集数据质量分析报告
-- BridgeData V2 数据结构对比报告
+- 真实 Open X-Embodiment / BridgeData V2 小样本数据质量分析报告
 - 仿真数据与真实机器人数据差异分析
 
 报告应尽量包含可量化结果，例如样本数量、字段缺失率、轨迹长度分布、动作维度分布和异常样例。
