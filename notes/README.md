@@ -12,6 +12,7 @@
 - [Day 6：Action / State 分布统计](day6-action-state-summary-walkthrough.md)
 - [Day 7：Action / State 分布可视化](day7-distribution-visualization-walkthrough.md)
 - [Day 8：一键数据质量分析 Pipeline](day8-quality-pipeline-walkthrough.md)
+- [Day 9：数据集 Profile 配置化](day9-dataset-profile-walkthrough.md)
 
 建议每次记录保持三个部分：
 

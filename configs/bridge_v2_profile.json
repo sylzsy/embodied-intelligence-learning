@@ -1,0 +1,13 @@
+{
+  "dataset": "bridge",
+  "description": "BridgeData V2 / BridgeData-style robot manipulation episode profile",
+  "expected_action_dim": 7,
+  "expected_state_dim": 7,
+  "expected_image_shape": "256x256x3",
+  "min_trajectory_length": 2,
+  "max_trajectory_length": 200,
+  "action_abs_limit": 1.0,
+  "primary_image_field": "steps/observation/image_0",
+  "unified_image_field": "steps/observation/image",
+  "language_field": "steps/language_instruction"
+}

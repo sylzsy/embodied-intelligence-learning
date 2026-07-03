@@ -1,5 +1,15 @@
 # 学习日志
 
+## 2026-07-03 Day 9
+
+- **今日完成**：新增 `configs/bridge_v2_profile.json`，将 BridgeData V2 的 action/state 维度、图像尺寸、轨迹长度阈值、action 数值阈值和字段映射关系配置化；改造 `run_quality_pipeline.py` 支持 `--profile` 参数。
+
+- **今日理解**：把参数放进 profile 是为了让 pipeline 和具体数据集解耦。后续切换到新的机器人数据集时，只需要新增 profile，不需要改主流程代码，也避免手动写长命令导致参数不一致。
+
+- **运行结果**：使用 `configs/bridge_v2_profile.json` 运行 pipeline 后，成功生成 `quality_summary.json`、`distribution_summary.json`、4 张分布图和 `manifest.json`。`manifest.json` 中记录了输入数据、profile 配置和输出产物路径。
+
+- **下一步行动**：继续扩展 profile 机制，后续可以为其他机器人数据集新增 profile，并尝试接入真实 BridgeData V2 小样本。
+
 ## 2026-07-03 Day 8
 
 - **今日完成**：新增 `run_quality_pipeline.py`，将质量检查、action/state 分布统计和分布图生成整合为一键 pipeline。输入 `bridge_mock_episodes.jsonl` 后，可自动输出 `quality_summary.json`、`distribution_summary.json`、4 张分布图和 `manifest.json`。

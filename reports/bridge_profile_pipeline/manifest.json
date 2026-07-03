@@ -1,0 +1,25 @@
+{
+  "input": "scripts\\bridge_mock_episodes.jsonl",
+  "profile_path": "configs\\bridge_v2_profile.json",
+  "profile": {
+    "dataset": "bridge",
+    "expected_action_dim": 7,
+    "expected_state_dim": 7,
+    "expected_image_shape": "256x256x3",
+    "min_trajectory_length": 2,
+    "max_trajectory_length": 200,
+    "action_abs_limit": 1.0,
+    "description": "BridgeData V2 / BridgeData-style robot manipulation episode profile",
+    "primary_image_field": "steps/observation/image_0",
+    "unified_image_field": "steps/observation/image",
+    "language_field": "steps/language_instruction"
+  },
+  "quality_summary": "reports\\bridge_profile_pipeline\\quality_summary.json",
+  "distribution_summary": "reports\\bridge_profile_pipeline\\distribution_summary.json",
+  "plots": [
+    "reports\\bridge_profile_pipeline\\plots\\action_range.png",
+    "reports\\bridge_profile_pipeline\\plots\\action_std.png",
+    "reports\\bridge_profile_pipeline\\plots\\state_range.png",
+    "reports\\bridge_profile_pipeline\\plots\\state_std.png"
+  ]
+}
