@@ -86,6 +86,16 @@ python scripts/summarize_dataset.py --input scripts/bridge_mock_episodes.jsonl -
 python scripts/plot_distribution.py --input reports/bridge_mock_distribution_summary.json --output-dir assets/distributions
 ```
 
+### `run_quality_pipeline.py`
+
+一键运行质量检查、action/state 分布统计和图表生成。
+
+运行示例：
+
+```bash
+python scripts/run_quality_pipeline.py --input scripts/bridge_mock_episodes.jsonl --output-dir reports/bridge_mock_pipeline
+```
+
 ## 计划优先实现
 
 - `load_rlds_sample.py`: 加载公开机器人数据集小样本。
