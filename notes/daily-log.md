@@ -1,17 +1,56 @@
 # 学习日志
 
-  ## 2026-06-26
+## 2026-07-03 Day 8
 
-  - **今日收获**：完成了 Open X-Embodiment
-  数据集初探——搞清楚了它的规模（100万+轨迹、60个数据集、22种机器人）和数据格式（Episode → Step → observation + action
-  的层级结构），数据长什么样心里有数了。精读了 RT-2 论文，理解了 VLA 的核心逻辑——拿大 VLM 做 co-fine-tuning、把 action
-  转成 token 跟文字混着训，让机器人既有常识又能动手。顺便把 VLM/VLA/co-fine-tuning/泛化层次 这些基础概念都捋清了。
+- **今日完成**：新增 `run_quality_pipeline.py`，将质量检查、action/state 分布统计和分布图生成整合为一键 pipeline。输入 `bridge_mock_episodes.jsonl` 后，可自动输出 `quality_summary.json`、`distribution_summary.json`、4 张分布图和 `manifest.json`。
 
-  - **卡点/疑问**：Open X-Embodiment 还没实际下载数据，RLDS 格式到底怎么用还没上手。RT-2 的 chain-of-thought
-  推理具体是怎么触发的、tokenization 的细节（action 离散化到 256 个 bin 具体怎么映射）还需要后面深入看。
+- **今日理解**：pipeline 的价值在于工程复现。相比手动依次运行多个脚本，一键 pipeline 能保证输入、参数、输出路径和分析结果可追踪，更接近真实数据工程项目中的自动化分析流程。
 
-  - **明天计划**：下载 Open X-Embodiment 一个小子集（比如 Bridge V2），用 Python 加载数据看看实际长什么样。开第二篇论文
-  Diffusion Policy，和 RT-2 对比着看。
+- **运行结果**：成功生成 `reports/bridge_mock_pipeline/`，其中包含质量检查结果、分布统计结果、action/state 可视化图表和 manifest 文件。
+
+- **下一步行动**：基于当前 pipeline 继续扩展真实数据接入能力，后续尝试读取真实 BridgeData V2 metadata 或小样本 episode。
+
+## 2026-07-03 Day 7
+
+- **今日完成**：新增 `plot_distribution.py`，将 action/state 每一维的 min-max 范围和 std 生成可视化图表，包括 `action_range.png`、`action_std.png`、`state_range.png`、`state_std.png`。
+
+- **今日理解**：range 图用于观察每一维的最小值、最大值和均值，std 图用于观察每一维的波动程度。相比只看 JSON，图表更适合快速发现某一维是否异常大、是否长期不变。
+
+- **运行结果**：当前 mock 数据中 action 第 6 维变化最明显，std 最大；部分维度 std 为 0，说明这些维度在当前样本中没有变化。
+
+- **下一步行动**：将质量检查、分布统计和图表生成整合成一键 pipeline，提升项目可复现性。
+
+## 2026-07-03 Day 6
+
+- **今日完成**：新增 `summarize_dataset.py`，对 BridgeData-style episode 的 action/state 进行分布统计，输出每一维的 min、max、mean、std，并生成 `bridge_mock_distribution_summary.json`。
+
+- **今日理解**：字段完整和维度正确不代表数据质量一定好，还需要观察 action/state 每一维的数值范围和波动情况。若某一维 std 长期为 0，可能说明该自由度没有被使用，也可能是数据采集或字段映射异常；若 max 异常大，可能是单位转换、归一化或日志解析问题。
+
+- **运行结果**：当前 mock 数据中 action/state 均为 7 维，第 6 维波动最大，部分维度 std 为 0，说明当前小样本中这些维度没有变化。
+
+- **下一步行动**：将 action/state 分布统计结果可视化，生成更适合报告展示的图表。
+
+## 2026-07-03 Day 5
+
+- **今日完成**：增强 `check_dataset_quality.py`，新增轨迹长度阈值、action 极端值检查和缺失率统计，输出 `quality_rates` 用于量化语言指令、state、image、action 等字段问题。
+
+- **今日理解**：`issue_types` 用于统计每类问题出现次数，`quality_rates` 用于把缺失类问题按 step 总数转成比例，适合写数据质量报告。例如 5 个 step 中 1 个缺少语言指令，缺失率就是 20%。
+
+- **运行结果**：BridgeData-style mock 数据在 `action_dim=7`、`state_dim=7`、`image_shape=256x256x3`、轨迹长度阈值和 action 数值阈值下检查结果为 `issue_count=0`；异常样例可识别 `trajectory_too_short`、`action_value_out_of_range`、`missing_language_instruction` 等问题。
+
+- **下一步行动**：继续补充分布统计能力，观察 action/state 每一维的数值范围和波动情况。
+
+## 2026-07-02 Day 4
+
+- **今日完成**：整理 BridgeData V2 官方 schema，明确核心字段包括 `steps/action`、`steps/observation/state`、`steps/observation/image_0`、`steps/language_instruction` 和 `steps/language_embedding`。由于 Google Colab 暂时无法登录，改为基于官方 TFDS 文档和本地 mock 数据继续推进。
+
+- **今日理解**：BridgeData V2 的 action 和 state 都是 7 维，主视角图像字段是 `image_0`，尺寸为 256 x 256 x 3，`language_embedding` 是 512 维。真实数据集字段需要先映射到项目统一 JSONL 格式，再复用统一质量检查脚本。
+
+- **运行结果**：运行 `bridge_sample_to_jsonl.py` 生成 1 个 BridgeData-style episode，共 2 个 step。随后使用增强后的 `check_dataset_quality.py` 设置 `--expected-action-dim 7 --expected-state-dim 7 --expected-image-shape 256x256x3` 进行检查，结果 `issue_count` 为 0。
+
+- **工程收获**：把 BridgeData V2 官方 schema 转成了可执行质检规则。后续接入真实 BridgeData V2 episode 时，可以复用相同规则检查 action/state/image 是否符合训练数据要求。
+
+- **下一步行动**：继续增强质量检查脚本，加入轨迹长度阈值、语言指令缺失率、图像字段缺失率和 action 极端值检查。
 
 ## 2026-07-01
 
@@ -34,6 +73,14 @@
 - **卡点 / 疑问**：当前本地 Python 环境没有安装 `tensorflow` 和 `tensorflow_datasets`，因此还没有直接加载真实 TFDS/RLDS 数据。后续需要单独准备兼容环境，再尝试读取真实 BridgeData V2 小样本 metadata。
 
 - **下一步行动**：准备 Day 3，研究如何安装或创建适合 TFDS/RLDS 的 Python 环境，并尝试读取 `bridge` 数据集的 metadata 或小规模样本。
+
+## 2026-06-26
+
+- **今日收获**：完成了 Open X-Embodiment 数据集初探——搞清楚了它的规模（100万+轨迹、60个数据集、22种机器人）和数据格式（Episode → Step → observation + action 的层级结构），数据长什么样心里有数了。精读了 RT-2 论文，理解了 VLA 的核心逻辑——拿大 VLM 做 co-fine-tuning、把 action 转成 token 跟文字混着训，让机器人既有常识又能动手。顺便把 VLM/VLA/co-fine-tuning/泛化层次这些基础概念都捋清了。
+
+- **卡点/疑问**：Open X-Embodiment 还没实际下载数据，RLDS 格式到底怎么用还没上手。RT-2 的 chain-of-thought 推理具体是怎么触发的、tokenization 的细节（action 离散化到 256 个 bin 具体怎么映射）还需要后面深入看。
+
+- **明天计划**：下载 Open X-Embodiment 一个小子集（比如 Bridge V2），用 Python 加载数据看看实际长什么样。开第二篇论文 Diffusion Policy，和 RT-2 对比着看。
 
 ## 2026-07-01 Day 3
 
