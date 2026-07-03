@@ -66,6 +66,16 @@ python scripts/check_dataset_quality.py --input scripts/bridge_mock_episodes.jso
 python scripts/inspect_tfds_builder.py --dataset bridge
 ```
 
+### `summarize_dataset.py`
+
+统计机器人 episode 数据中 action / state 每一维的 min、max、mean 和 std，用于发现分布异常。
+
+运行示例：
+
+```bash
+python scripts/summarize_dataset.py --input scripts/bridge_mock_episodes.jsonl --output reports/bridge_mock_distribution_summary.json
+```
+
 ## 计划优先实现
 
 - `load_rlds_sample.py`: 加载公开机器人数据集小样本。

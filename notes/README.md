@@ -9,6 +9,7 @@
 - [Day 3：搭建 TFDS/RLDS 环境](day3-tfds-environment-walkthrough.md)
 - [Day 4：BridgeData V2 Metadata 与 Colab 验证路线](day4-bridge-metadata-colab-walkthrough.md)
 - [Day 5：增强数据质量指标](day5-quality-metrics-walkthrough.md)
+- [Day 6：Action / State 分布统计](day6-action-state-summary-walkthrough.md)
 
 建议每次记录保持三个部分：
 

@@ -1,0 +1,114 @@
+{
+  "input": "scripts\\bridge_mock_episodes.jsonl",
+  "episodes": 1,
+  "action_summary": {
+    "count": 2,
+    "dim": 7,
+    "per_dim": [
+      {
+        "index": 0,
+        "min": 0.01,
+        "max": 0.02,
+        "mean": 0.015,
+        "std": 0.005
+      },
+      {
+        "index": 1,
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      {
+        "index": 2,
+        "min": 0.01,
+        "max": 0.02,
+        "mean": 0.015,
+        "std": 0.005
+      },
+      {
+        "index": 3,
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      {
+        "index": 4,
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      {
+        "index": 5,
+        "min": 0.01,
+        "max": 0.01,
+        "mean": 0.01,
+        "std": 0.0
+      },
+      {
+        "index": 6,
+        "min": 0.8,
+        "max": 1.0,
+        "mean": 0.9,
+        "std": 0.1
+      }
+    ]
+  },
+  "state_summary": {
+    "count": 2,
+    "dim": 7,
+    "per_dim": [
+      {
+        "index": 0,
+        "min": 0.1,
+        "max": 0.12,
+        "mean": 0.11,
+        "std": 0.01
+      },
+      {
+        "index": 1,
+        "min": 0.2,
+        "max": 0.21,
+        "mean": 0.205,
+        "std": 0.005
+      },
+      {
+        "index": 2,
+        "min": 0.3,
+        "max": 0.32,
+        "mean": 0.31,
+        "std": 0.01
+      },
+      {
+        "index": 3,
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      {
+        "index": 4,
+        "min": 0.0,
+        "max": 0.0,
+        "mean": 0.0,
+        "std": 0.0
+      },
+      {
+        "index": 5,
+        "min": 0.1,
+        "max": 0.1,
+        "mean": 0.1,
+        "std": 0.0
+      },
+      {
+        "index": 6,
+        "min": 0.8,
+        "max": 1.0,
+        "mean": 0.9,
+        "std": 0.1
+      }
+    ]
+  }
+}
