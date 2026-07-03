@@ -14,11 +14,32 @@
 
 | 模块 | 当前状态 | 产出 |
 | --- | --- | --- |
-| 数据集调研 | 已启动 | [Open X-Embodiment 初探](datasets/oxe-overview.md) |
+| 数据集调研 | 已启动 | [Open X-Embodiment 初探](datasets/oxe-overview.md) / [BridgeData V2 字段结构](datasets/bridge-v2-field-schema.md) |
 | 论文阅读 | 已启动 | [RT-2 论文笔记](papers/rt-2-notes.md) |
 | 学习日志 | 已启动 | [daily-log](notes/daily-log.md) |
-| 数据质量检测 | 已启动 | [样例质量检查脚本](scripts/check_dataset_quality.py) / [Day 1 执行手册](notes/day1-quality-check-walkthrough.md) |
+| 数据质量检测 | 已形成阶段成果 | [质量检查脚本](scripts/check_dataset_quality.py) / [BridgeData V2 项目报告](reports/bridge-data-quality-project-report.md) |
 | 仿真实践 | 待开始 | 计划完成 ROS2 / Isaac Sim 基础 demo |
+
+## 阶段成果：BridgeData V2 数据质量检查
+
+当前已完成一个可展示的数据工程闭环：
+
+```text
+BridgeData V2 schema 调研
+-> BridgeData-style mock episode 构造
+-> 统一 JSONL 格式转换
+-> schema 和质量阈值检查
+-> Markdown / JSON 报告输出
+```
+
+核心产出：
+
+- [BridgeData V2 字段结构笔记](datasets/bridge-v2-field-schema.md)
+- [BridgeData V2 数据质量检查项目报告](reports/bridge-data-quality-project-report.md)
+- [简历项目描述](reports/resume-project-brief.md)
+- [数据质量检查脚本](scripts/check_dataset_quality.py)
+
+当前脚本支持字段完整性、action/state 维度、图像尺寸、timestamp 递增、轨迹长度阈值、action 极端值和缺失率统计。
 
 ## 仓库结构
 
